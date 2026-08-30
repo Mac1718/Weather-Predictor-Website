@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+package-lock.json
+frontend/node_modules/
+frontend/package-lock.json
+backend/target/
+frontend/dist/
+dist/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+*.class
+*.jar
+*.war
+*.ear
+
+# Generated files
+.claude/
+.coverage
+coverage/
+*.lcov
+
+# OS
+.DS_Store
+Thumbs.db
