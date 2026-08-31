@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCitySearch, useSavedLocations } from '../../hooks/useWeather.js'
 
-export function Header({ onCitySearch, onCitySelect, currentCity }) {
+export function Header({ onCitySearch, onCitySelect, currentCity, darkMode, onToggleTheme }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showSaved, setShowSaved] = useState(false)
@@ -19,7 +19,7 @@ export function Header({ onCitySearch, onCitySelect, currentCity }) {
     if (searchQuery.length >= 1) {
       debouncedSearch(searchQuery)
     } else {
-      search('')  // load all cities
+      search('')
     }
   }, [searchQuery])
 
@@ -47,6 +47,9 @@ export function Header({ onCitySearch, onCitySelect, currentCity }) {
     }
   }
 
+  const currentCityName = currentCity?.name || 'Bengaluru'
+  const currentCityState = currentCity?.state || ''
+
   return (
     <header className="header" ref={searchRef}>
       <div className="header-left">
@@ -56,23 +59,43 @@ export function Header({ onCitySearch, onCitySelect, currentCity }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.span
-            className="greeting"
-            style={{ margin: 0 }}
-          >
-            Welcome
-          </motion.span>
-          <motion.span
-            className="username"
-            style={{ margin: 0 }}
-          >
-            Weather Predictor
-          </motion.span>
+          <motion.span className="greeting" style={{ margin: 0 }}>Welcome</motion.span>
+          <motion.span className="username" style={{ margin: 0 }}>Weather Predictor</motion.span>
         </motion.div>
+
+        {/* City selector pill */}
+        <motion.button
+          className="city-pill"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          onClick={() => setSearchOpen(true)}
+          title="Change city"
+        >
+          <svg aria-hidden="true"><use href="#i-pin" /></svg>
+          <span>{currentCityName}</span>
+          {currentCityState && <span style={{ color: 'rgba(255,255,255,.45)', fontSize: '12px' }}>{currentCityState}</span>}
+          <svg style={{ width: '12px', height: '12px', color: 'rgba(255,255,255,.4)' }} aria-hidden="true">
+            <use href="#i-search" />
+          </svg>
+        </motion.button>
       </div>
 
       <div className="header-tools">
-        {/* Search Button */}
+        {/* Inline search bar */}
+        <div className="inline-search">
+          <svg aria-hidden="true"><use href="#i-search" /></svg>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchOpen(true)}
+            placeholder="Search cities..."
+            aria-label="Search cities"
+          />
+        </div>
+
+        {/* Search dropdown button */}
         <div className="dropdown-container">
           <motion.button
             className="tool-btn"
@@ -177,11 +200,11 @@ export function Header({ onCitySearch, onCitySelect, currentCity }) {
             {locations.length > 0 && (
               <span style={{
                 position: 'absolute',
-                top: '8px',
-                right: '8px',
+                top: '-2px',
+                right: '-2px',
                 width: '16px',
                 height: '16px',
-                background: '#fff',
+                background: '#60a5fa',
                 color: '#04121b',
                 borderRadius: '50%',
                 fontSize: '10px',
@@ -250,6 +273,20 @@ export function Header({ onCitySearch, onCitySelect, currentCity }) {
           </AnimatePresence>
         </div>
 
+        {/* Theme toggle */}
+        <motion.button
+          className="theme-toggle"
+          onClick={onToggleTheme}
+          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          style={{ marginLeft: '4px' }}
+        >
+          <span className="theme-toggle-knob" />
+        </motion.button>
       </div>
     </header>
   )

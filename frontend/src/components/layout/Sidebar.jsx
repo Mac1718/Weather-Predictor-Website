@@ -4,7 +4,8 @@ import { motion } from 'framer-motion'
 const navItems = [
   { icon: 'i-cloud-rain', label: 'Dashboard' },
   { icon: 'i-chart', label: 'Reports' },
-  { icon: 'i-globe', label: 'Explore regions' },
+  { icon: 'i-insights', label: 'Insights' },
+  { icon: 'i-globe', label: 'Climate Atlas' },
   { icon: 'i-cal', label: 'Calendar' },
   { icon: 'i-gear', label: 'Settings' },
 ]
@@ -16,32 +17,15 @@ export function Sidebar({ onNavClick, activePage }) {
 
   return (
     <aside className="sidebar" role="navigation" aria-label="Main navigation">
-      <motion.svg
+      <motion.img
         className="logo"
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
+        src="/logo.svg"
+        alt="Weather Predictor Logo"
         initial={{ scale: 0.7, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.7, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <defs>
-          <clipPath id="logoClip">
-            <rect x="4" y="4" width="32" height="32" rx="8" />
-          </clipPath>
-        </defs>
-        <g clipPath="url(#logoClip)">
-          <rect x="4" y="4" width="32" height="32" rx="8" fill="rgba(255,255,255,0.1)" />
-          <g stroke="#fff" strokeWidth="1.5" strokeLinecap="round" fill="none">
-            <path d="M10 16c3 0 4-2 7-2s4 2 7 2" />
-            <path d="M10 20c3 0 4-2 7-2s4 2 7 2" />
-            <path d="M10 24c3 0 4-2 7-2s4 2 7 2" />
-            <path d="M10 12c3 0 4-2 7-2s4 2 7 2" />
-            <path d="M10 8c3 0 4-2 7-2s4 2 7 2" />
-            <path d="M10 28c3 0 4-2 7-2s4 2 7 2" />
-          </g>
-        </g>
-      </motion.svg>
+        style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+      />
 
       <nav className="nav">
         {navItems.map((item, index) => {
@@ -66,6 +50,7 @@ export function Sidebar({ onNavClick, activePage }) {
               <svg className="nav-icon" aria-hidden="true">
                 <use href={`#${item.icon}`} />
               </svg>
+              <span className="nav-item-label">{item.label}</span>
             </motion.div>
           )
         })}
