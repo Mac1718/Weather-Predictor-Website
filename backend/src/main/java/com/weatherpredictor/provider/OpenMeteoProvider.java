@@ -156,15 +156,16 @@ public class OpenMeteoProvider {
         if (response.getHourly() != null) {
             HourlyData h = response.getHourly();
             int size = h.getTime().size();
+ZonedDateTime cutoff = now.minusHours(1);
 
             for (int i = 0; i < size; i += 3) { // Every 3 hours
                 if (i >= size) break;
 
                 String timeStr = h.getTime().get(i);
-                LocalTime time = LocalTime.parse(timeStr.substring(11, 16)); // Extract HH:MM from ISO string
+                ZonedDateTime entryTime = ZonedDateTime.parse(timeStr + "Z").withZoneSameInstant(zoneId);
 
                 // Only include future/current hours
-                if (time.isBefore(now.toLocalTime().minusHours(1))) continue;
+                if (entryTime.isBefore(cutoff)) continue;
 
                 Double temp = h.getTemperature2m().get(i);
                 Integer precipProb = h.getPrecipitationProbability().get(i);
@@ -173,7 +174,7 @@ public class OpenMeteoProvider {
                 Integer weatherCode = h.getWeatherCode().get(i);
 
                 hourly.add(HourlyForecastDto.builder()
-                        .time(time.format(DateTimeFormatter.ofPattern("HH:mm")))
+                        .time(entryTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")))
                         .temperature(temp != null ? Math.round(temp) : 0.0)
                         .precipitationProbability(precipProb != null ? precipProb : 0)
                         .precipitation(precip != null ? precip : 0.0)
