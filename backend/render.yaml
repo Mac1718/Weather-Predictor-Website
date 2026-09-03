@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: weather-predictor-api
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/weather-predictor-api-1.0.0.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
